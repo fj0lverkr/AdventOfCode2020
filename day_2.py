@@ -1,6 +1,8 @@
 """
-Puzzle 1:
+Puzzle 1 and 2:
 How many passwords are valid according to their policies?
+Policy 1: password needs to contain min and max occurrences of a given character.
+Policy 2: password needs to have a given character at either position 1 or position 2.
 """
 
 DATA_SET = "datasets/day_2_puzzle_1.txt"
