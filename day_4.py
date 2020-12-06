@@ -55,33 +55,32 @@ HCL:{self._hair_color} ECL:{self._eye_color} PID:{self._passport_id} CID:{self._
             else:
                 return False
         else:
-            if self.validate(True, False):
-                hcl_regex = re.compile(r"#[0-9a-zA-Z]{6}")
+            try:
+                hcl_regex = re.compile(r"#[0-9a-z]{6}")
                 ecl_list = ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
                 pid_regex = re.compile(r"[0-9]{9}")
-                byr_valid = 1920 <= int(self._birth_year) <= 2002
-                iyr_valid = 2010 <= int(self._issue_year) <= 2020
-                eyr_valid = 2020 <= int(self._expiration_year) <= 2030
-                if self._height.endswith("cm"):
-                    height_cm = int(self._height.strip("cm"))
+                byr_valid = 1920 <= int(self._birth_year) <= 2002 and len(str(self._birth_year)) == 4
+                iyr_valid = 2010 <= int(self._issue_year) <= 2020 and len(str(self._issue_year)) == 4
+                eyr_valid = 2020 <= int(self._expiration_year) <= 2030 and len(str(self._expiration_year)) == 4
+                if self._height[-2:] == "cm":
+                    height_cm = int(self._height[:-2])
                     hgt_valid = 150 <= height_cm <= 193
-                elif self._height.endswith("in"):
-                    height_in = int(self._height.strip("in"))
+                elif self._height[-2:] == "in":
+                    height_in = int(self._height[:-2])
                     hgt_valid = 59 <= height_in <= 76
                 else:
                     return False
-                hcl_valid = hcl_regex.match(self._hair_color)
+                hcl_valid = hcl_regex.match(self._hair_color) is not None
                 ecl_valid = False
                 for color in ecl_list:
                     if color == self._eye_color:
                         ecl_valid = True
-                        break
-                pid_valid = pid_regex.match(self._passport_id)
+                pid_valid = pid_regex.match(self._passport_id) is not None
                 if byr_valid and iyr_valid and eyr_valid and hgt_valid and hcl_valid and ecl_valid and pid_valid:
                     return True
                 else:
                     return False
-            else:
+            except TypeError:
                 return False
 
 
@@ -98,44 +97,28 @@ def process_raw_document(doc):
                 'ecl': None,
                 'pid': None,
                 'cid': None}
-    processable_lines = []
-    for line in doc:
-        blocks = line.split(" ")
-        for block in blocks:
-            # processable_lines.append(block.replace("\n", ""))
-            processable_lines.append(block)
-        for key_and_value in processable_lines:
-            key_and_value_data = key_and_value.split(":")
-            doc_data[key_and_value_data[0]] = key_and_value_data[1]
+    processable_lines = doc.split()
+    for key_and_value in processable_lines:
+        key_and_value_data = key_and_value.split(":")
+        doc_data[key_and_value_data[0]] = key_and_value_data[1]
     return doc_data
 
 
 def puzzle(complex_check: bool):
     valid_docs = 0
-    documents_raw = []
-    lines = []
     with open(DATA_SET, "r") as file:
-        for line in file.readlines():
-            if line == "\n":
-                if len(lines) > 0:
-                    documents_raw.append(lines)
-                    lines = []
-            else:
-                lines.append(line)
-
-    for document_raw in documents_raw:
-        p_data = process_raw_document(document_raw)
-        passport = Passport(p_data['byr'], p_data['iyr'], p_data['eyr'], p_data['hgt'], p_data['hcl'], p_data['ecl'],
-                            p_data['pid'], p_data['cid'])
-        if passport.validate(True, complex_check):
-            print(passport)
-            valid_docs += 1
+        for line in file.read()[:-1].split("\n\n"):
+            p_data = process_raw_document(line)
+            passport = Passport(p_data['byr'], p_data['iyr'], p_data['eyr'], p_data['hgt'], p_data['hcl'], p_data['ecl']
+                                , p_data['pid'], p_data['cid'])
+            if passport.validate(True, complex_check):
+                valid_docs += 1
     print(f"Valid passports: {valid_docs}.")
 
 
 if __name__ == "__main__":
     # Puzzle 1:
-    puzzle(True)
+    puzzle(False)
 
     # Puzzle 2:
-    # puzzle(True)
+    puzzle(True)
