@@ -113,6 +113,9 @@ def puzzle(complex_check: bool):
                                 , p_data['pid'], p_data['cid'])
             if passport.validate(True, complex_check):
                 valid_docs += 1
+                print(f"--------\nRAW:{line}\nPROCESSED:{p_data}\n--VALID--\n")
+            else:
+                print(f"--------\nRAW:{line}\nPROCESSED:{p_data}\n-INVALID-\n")
     print(f"Valid passports: {valid_docs}.")
 
 
