@@ -77,7 +77,7 @@ HCL:{self._hair_color} ECL:{self._eye_color} PID:{self._passport_id} CID:{self._
                 for color in ecl_list:
                     if color == self._eye_color:
                         ecl_valid = True
-                pid_valid = pid_regex.match(self._passport_id) is not None
+                pid_valid = pid_regex.match(self._passport_id) is not None and len(self._passport_id) == 9
                 if byr_valid and iyr_valid and eyr_valid and hgt_valid and hcl_valid and ecl_valid and pid_valid:
                     return True
                 else:
