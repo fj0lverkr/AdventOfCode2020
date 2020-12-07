@@ -17,6 +17,8 @@ Puzzle 2:
 """
 import re
 
+DATA_SET = "datasets/day_4_puzzle_1.txt"
+
 
 class Passport:
     _birth_year = 0
@@ -84,10 +86,6 @@ HCL:{self._hair_color} ECL:{self._eye_color} PID:{self._passport_id} CID:{self._
                 return False
 
 
-DATA_SET = "datasets/day_4_puzzle_1.txt"
-DELIMITER = "\n"
-
-
 def process_raw_document(doc):
     doc_data = {'byr': None,
                 'iyr': None,
@@ -114,15 +112,15 @@ def puzzle(complex_check: bool):
             document_valid = passport.validate(True, complex_check)
             if document_valid:
                 valid_docs += 1
-                print(f"--------\nRAW:{line}\nPROCESSED:{p_data}\n--VALID--\n")
+                print(f"--------\nRAW:{line}\nPROCESSED:{p_data}\nPASSPORT:{passport}\n--VALID--\n")
             else:
-                print(f"--------\nRAW:{line}\nPROCESSED:{p_data}\n-INVALID-\n")
+                print(f"--------\nRAW:{line}\nPROCESSED:{p_data}\nPASSPORT:{passport}\n-INVALID-\n")
     print(f"Valid passports: {valid_docs}.")
 
 
 if __name__ == "__main__":
     # Puzzle 1:
-    puzzle(False)
+    # puzzle(False)
 
     # Puzzle 2:
     puzzle(True)
