@@ -111,7 +111,8 @@ def puzzle(complex_check: bool):
             p_data = process_raw_document(line)
             passport = Passport(p_data['byr'], p_data['iyr'], p_data['eyr'], p_data['hgt'], p_data['hcl'], p_data['ecl']
                                 , p_data['pid'], p_data['cid'])
-            if passport.validate(True, complex_check):
+            document_valid = passport.validate(True, complex_check)
+            if document_valid:
                 valid_docs += 1
                 print(f"--------\nRAW:{line}\nPROCESSED:{p_data}\n--VALID--\n")
             else:
