@@ -6,9 +6,10 @@ COL_SPLITS = 3
 DATA_SET = "datasets/day_5_puzzle_1.txt"
 
 
-def puzzle_1():
+def puzzle(part: int):
     with open(DATA_SET, "r") as file:
         highest_seat_number = 0
+        taken_seats = []
 
         for line in file.read().splitlines():
             rows = [n for n in ROWS]
@@ -31,12 +32,20 @@ def puzzle_1():
             final_col = cols[0]
 
             seat = final_row * 8 + final_col
+            taken_seats.append(seat)
             if seat > highest_seat_number:
                 highest_seat_number = seat
-            # print(f"ROW {final_row} * 8 + COL {final_col} = SEAT {seat}. Highest Seat: {highest_seat_number}")
-
-        return highest_seat_number
+        if part == 1:
+            return highest_seat_number
+        elif part == 2:
+            taken_seats.sort()
+            your_seat = 0
+            for k in range(len(taken_seats)):
+                if taken_seats[k + 1] - taken_seats[k] > 1:
+                    your_seat = taken_seats[k] + 1
+                    break
+            return your_seat
 
 
 if __name__ == "__main__":
-    print(puzzle_1())
+    print(puzzle(2))
